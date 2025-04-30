@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Деление урана-235: энергия атома</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #0b0c10;
+      color: #c5c6c7;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 50px;
+    }
+    canvas {
+      background-color: #1f2833;
+      margin-top: 20px;
+      border: 2px solid #66fcf1;
+      border-radius: 10px;
+    }
+    .content {
+      max-width: 900px;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1, h2, h3 {
+      color: #66fcf1;
+    }
+    .equation, .result, .step {
+      background: #1f2833;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      color: #45a29e;
+      text-align: left;
+    }
+    .input-section {
+      background: #1f2833;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 10px;
+    }
+    input {
+      padding: 10px;
+      margin-right: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #66fcf1;
+      border: none;
+      border-radius: 5px;
+      color: #0b0c10;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a29e;
+    }
+  </style>
+</head>
+<body>
+  <h1>Деление урана-235: энергия атома</h1>
+
+  <canvas id="canvas" width="800" height="500"></canvas>
+
+  <div class="content">
+    <h2>Что такое уран-235?</h2>
+    <p>Уран-235 — это редкий изотоп урана, обладающий способностью к делению при захвате нейтрона. Он составляет всего около 0,7% природного урана и является основным топливом для ядерных реакторов и атомных бомб.</p>
+
+    <h2>Что делает нейтрон?</h2>
+    <p>Когда медленный нейтрон сталкивается с ядром урана-235, он поглощается ядром, делая его ещё более нестабильным. Это приводит к резкому изменению структуры ядра.</p>
+
+    <h2>Почему происходит деление?</h2>
+    <p>Поглощённый нейтрон вызывает перераспределение энергии внутри ядра, создавая сильные деформации. В результате ядро расщепляется на два более лёгких ядра и выделяет дополнительные нейтроны и огромное количество энергии.</p>
+
+    <h2>Какие осколки образуются?</h2>
+    <p>Продуктами деления чаще всего являются ядра бария-141 и криптона-92, а также 2-3 новых нейтрона. Однако возможны и другие варианты осколков.</p>
+
+    <h2>Физические расчёты</h2>
+    <h3>Расчёт выделенной энергии через дефект массы</h3>
+    <p>Дефект массы — это разница между массой исходного урана-235 и суммой масс осколков и нейтронов:</p>
+    <div class="equation">
+      \( \Delta m = m_{U} + m_{n} - (m_{Ba} + m_{Kr} + 3m_{n}) \)
+    </div>
+    <p>Энергия высвобождения рассчитывается по формуле Эйнштейна:</p>
+    <div class="equation">
+      \( E = \Delta m \times c^2 \)
+    </div>
+
+    <h3>Пример расчета энергии для одного события деления</h3>
+    <p>Средний дефект массы составляет около 0,2 а.е.м. (атомных единиц массы):</p>
+    <div class="result">
+      1 а.е.м. ≈ 931,5 МэВ<br>
+      0,2 × 931,5 = 186,3 МэВ
+    </div>
+    <p>Или приблизительно 3×10⁻¹¹ Дж энергии на одно событие деления.</p>
+
+    <h3>Сколько энергии выделится при делении 1 кг урана?</h3>
+    <p>Количество атомов в 1 кг урана-235:</p>
+    <div class="result">
+      \( \frac{6,02 \times 10^{23}}{235} \times 1000 \approx 2,56 \times 10^{24} \) атомов
+    </div>
+    <p>Теперь рассчитаем общую выделенную энергию:</p>
+    <div class="step">
+      <strong>Шаг 1:</strong> Количество атомов в 1 кг урана: \( 2,56 \times 10^{24} \) атомов
+    </div>
+    <div class="step">
+      <strong>Шаг 2:</strong> Энергия для одного атома: \( 3 \times 10^{-11} \) Дж
+    </div>
+    <div class="step">
+      <strong>Шаг 3:</strong> Общая энергия: \( E_{\text{общая}} = 2,56 \times 10^{24} \times 3 \times 10^{-11} \approx 7,68 \times 10^{13} \, \text{Дж} \)
+    </div>
+    <p>Это эквивалентно взрыву около 18 килотонн тротила!</p>
+
+    <div class="input-section">
+      <h3>Рассчитайте сами:</h3>
+      <input type="number" id="massInput" placeholder="Введите массу урана (кг)">
+      <button onclick="calculateEnergy()">Рассчитать энергию</button>
+      <div id="output" style="margin-top: 20px;"></div>
+    </div>
+
+    <div class="step" id="steps"></div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    class Particle {
+      constructor(x, y, vx, vy, color, radius) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.color = color;
+        this.radius = radius;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+      }
+    }
+
+    let nucleusParticles = [];
+    let neutrons = [];
+    let incomingNeutron;
+    let exploded = false;
+    let wobble = 0;
+
+    function createNucleus() {
+      const centerX = 400;
+      const centerY = 250;
+      for (let i = 0; i < 60; i++) {
+        let angle = Math.random() * Math.PI * 2;
+        let radius = Math.random() * 40;
+        let x = centerX + radius * Math.cos(angle);
+        let y = centerY + radius * Math.sin(angle);
+        let color = Math.random() < 0.5 ? '#ff4c4c' : '#66fcf1';
+        nucleusParticles.push(new Particle(x, y, 0, 0, color, 5));
+      }
+      incomingNeutron = new Particle(100, 250, 2, 0, '#66fcf1', 5);
+    }
+
+    function explodeNucleus() {
+      nucleusParticles.forEach(p => {
+        let angle = Math.random() * Math.PI * 2;
+        let speed = Math.random() * 4 + 2;
+        p.vx = speed * Math.cos(angle);
+        p.vy = speed * Math.sin(angle);
+      });
+      for (let i = 0; i < 3; i++) {
+        let angle = Math.random() * Math.PI * 2;
+        neutrons.push(new Particle(400, 250, 5 * Math.cos(angle), 5 * Math.sin(angle), '#66fcf1', 5));
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = 'rgba(31, 40, 51, 0.4)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (!incomingNeutron) createNucleus();
+
+      if (!exploded) {
+        wobble += 0.1;
+        nucleusParticles.forEach(p => {
+          p.x += Math.sin(wobble) * 0.5;
+          p.y += Math.cos(wobble) * 0.5;
+          p.draw();
+        });
+
+        incomingNeutron.update();
+        incomingNeutron.draw();
+
+        if (incomingNeutron.x > 380 && incomingNeutron.x < 420 && incomingNeutron.y > 240 && incomingNeutron.y < 260) {
+          exploded = true;
+          explodeNucleus();
+        }
+      } else {
+        nucleusParticles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        neutrons.forEach(p => {
+          p.update();
+          p.draw();
+        });
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    function calculateEnergy() {
+      const mass = document.getElementById('massInput').value;
+      const numberOfAtoms = 2.56e24 * mass / 1000;
+      const energyPerAtom = 3e-11;
+      const totalEnergy = numberOfAtoms * energyPerAtom;
+
+      // Выводим пошаговое решение
+      const stepsDiv = document.getElementById('steps');
+      stepsDiv.innerHTML = `
+        <div class="step"><strong>Шаг 1:</strong> Количество атомов в 1 кг урана: \( 2,56 \times 10^{24} \times \frac{${mass}}{1000} \) атомов = ${numberOfAtoms.toExponential(2)} атомов</div>
+        <div class="step"><strong>Шаг 2:</strong> Энергия для одного атома: \( 3 \times 10^{-11} \) Дж</div>
+        <div class="step"><strong>Шаг 3:</strong> Общая энергия: \( E_{\text{общая}} = ${numberOfAtoms.toExponential(2)} \times 3 \times 10^{-11} = ${totalEnergy.toExponential(2)} \, \text{Дж} \)</div>
+      `;
+      document.getElementById('output').innerHTML = `Общая энергия: ${totalEnergy.toFixed(2)} Дж`;
+    }
+  </script>
+</body>
+</html>
